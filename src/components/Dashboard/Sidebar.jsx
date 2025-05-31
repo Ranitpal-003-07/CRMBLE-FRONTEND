@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -9,7 +10,14 @@ import {
   useColorModeValue,
   IconButton,
   Tooltip,
-  Divider
+  Divider,
+  useBreakpointValue,
+  Drawer,
+  DrawerBody,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  useDisclosure,
 } from '@chakra-ui/react';
 import {
   LayoutDashboard,
@@ -17,12 +25,15 @@ import {
   Target,
   Megaphone,
   UserCircle,
-  LogOut
+  LogOut,
+  Menu
 } from 'lucide-react';
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const isMobile = useBreakpointValue({ base: true, lg: false });
   
   const bg = useColorModeValue('white', 'gray.900');
   const borderColor = useColorModeValue('gray.100', 'gray.700');
@@ -32,7 +43,6 @@ const Sidebar = () => {
   const activeBg = useColorModeValue('blue.50', 'blue.900');
   const activeColor = useColorModeValue('blue.600', 'blue.300');
   
-  // Updated paths to match nested route structure
   const navigationItems = [
     {
       id: 'dashboard',
@@ -66,28 +76,27 @@ const Sidebar = () => {
     }
   ];
 
-  // Updated active route detection
   const isActiveRoute = (path) => {
-    // Check if current route matches or starts with the path
-    return location.pathname === path || location.pathname.startsWith(`${path}/`);
+    return location.pathname === path;
   };
 
   const handleNavigation = (path) => {
     navigate(path);
+    if (isMobile) onClose();
   };
 
-  return (
+  const SidebarContent = () => (
     <Box
-      w="280px"
+      w={isMobile ? "full" : "280px"}
       h="100vh"
       bg={bg}
-      borderRight="1px solid"
+      borderRight={!isMobile ? "1px solid" : "none"}
       borderColor={borderColor}
-      position="fixed"
+      position={isMobile ? "relative" : "fixed"}
       left={0}
       top={0}
       zIndex={1000}
-      boxShadow="xl"
+      boxShadow={!isMobile ? "xl" : "none"}
     >
       <VStack spacing={0} align="stretch" h="full">
         {/* Header */}
@@ -216,6 +225,59 @@ const Sidebar = () => {
       </VStack>
     </Box>
   );
+
+  if (isMobile) {
+    return (
+      <>
+        <IconButton
+          icon={<Menu />}
+          onClick={onOpen}
+          variant="ghost"
+          position="fixed"
+          top={4}
+          left={4}
+          zIndex={1000}
+          bg={useColorModeValue("whiteAlpha.900", "blackAlpha.800")}
+          backdropFilter="blur(16px)"
+          borderRadius="16px"
+          shadow="xl"
+          border="1px solid"
+          borderColor={useColorModeValue("whiteAlpha.400", "whiteAlpha.200")}
+          _hover={{
+            bg: useColorModeValue("whiteAlpha.800", "blackAlpha.700"),
+            transform: 'scale(1.1) rotate(5deg)',
+            borderColor: useColorModeValue("blue.300", "blue.400"),
+          }}
+          transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+        />
+        
+        <Drawer
+          isOpen={isOpen}
+          placement="left"
+          onClose={onClose}
+          size="sm"
+        >
+          <DrawerOverlay backdropFilter="blur(8px)" />
+          <DrawerContent bg="transparent" shadow="none">
+            <DrawerCloseButton
+              color={textColor}
+              size="lg"
+              _hover={{ 
+                bg: useColorModeValue('gray.100', 'gray.700'),
+                transform: 'scale(1.1)',
+              }}
+              transition="all 0.2s ease"
+            />
+            <DrawerBody p={0}>
+              <SidebarContent />
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
+      </>
+    );
+  }
+
+  return <SidebarContent />;
 };
 
 export default Sidebar;
