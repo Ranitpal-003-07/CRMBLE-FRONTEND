@@ -1,18 +1,12 @@
-import React from 'react';
 import {
   Box,
   Text,
-  Stat,
-  StatHelpText,
-  StatArrow,
   Card,
   CardBody,
-  Flex,
   Icon,
   useColorModeValue,
   VStack,
   HStack,
-  Center,
   Grid,
   GridItem,
   Container,
@@ -21,18 +15,15 @@ import {
   Progress,
   Badge,
   Divider,
-  Stack
 } from '@chakra-ui/react';
 import { 
   Users, 
   UserCheck, 
   UserX, 
   TrendingUp, 
-  DollarSign, 
   Activity,
   Calendar,
   BarChart3,
-  PieChart,
   Zap
 } from 'lucide-react';
 import StatCard from '../components/Common/StatCard';
@@ -173,62 +164,6 @@ const WeeklyActivityChart = () => {
   );
 };
 
-// Activity Timeline Component
-const ActivityTimeline = () => {
-  const activities = [
-    { time: '2m ago', action: 'New user registered', type: 'success' },
-    { time: '5m ago', action: 'User upgraded to premium', type: 'info' },
-    { time: '12m ago', action: 'User account deactivated', type: 'warning' },
-    { time: '18m ago', action: 'Bulk import completed', type: 'success' },
-    { time: '25m ago', action: 'System maintenance', type: 'info' }
-  ];
-  
-  const getTypeColor = (type) => {
-    switch(type) {
-      case 'success': return 'green.400';
-      case 'warning': return 'orange.400';
-      case 'info': return 'blue.400';
-      default: return 'gray.400';
-    }
-  };
-  
-  return (
-    <VStack align="stretch" spacing={4}>
-      {activities.map((activity, index) => (
-        <HStack key={index} spacing={4}>
-          <Box
-            w={3}
-            h={3}
-            bg={getTypeColor(activity.type)}
-            borderRadius="full"
-            flexShrink={0}
-            position="relative"
-          >
-            {index < activities.length - 1 && (
-              <Box
-                position="absolute"
-                left="50%"
-                top="100%"
-                w="1px"
-                h={6}
-                bg="gray.200"
-                transform="translateX(-50%)"
-              />
-            )}
-          </Box>
-          <VStack align="start" spacing={0} flex="1">
-            <Text fontSize="sm" fontWeight="medium">
-              {activity.action}
-            </Text>
-            <Text fontSize="xs" color="gray.500">
-              {activity.time}
-            </Text>
-          </VStack>
-        </HStack>
-      ))}
-    </VStack>
-  );
-};
 
 const Customers = () => {
   const bgGradient = useColorModeValue(
@@ -309,66 +244,13 @@ const Customers = () => {
         </SimpleGrid>
 
         {/* Charts Section */}
-        <Grid templateColumns={{ base: "1fr", lg: "2fr 1fr" }} gap={6} mb={8}>
+        <Grid templateColumns={{ base: "1fr", lg: "1fr 1fr" }} gap={6} mb={8}>
           <ChartCard title="User vs Revenue Growth" icon={TrendingUp}>
             <UserRevenueChart />
           </ChartCard>
           
-          <ChartCard title="Recent Activity" icon={Zap} height="400px">
-            <ActivityTimeline />
-          </ChartCard>
-        </Grid>
-
-        {/* Weekly Activity Chart */}
-        <Grid templateColumns={{ base: "1fr", lg: "1fr 1fr" }} gap={6}>
           <ChartCard title="Weekly User Activity" icon={Calendar}>
             <WeeklyActivityChart />
-          </ChartCard>
-          
-          <ChartCard title="Engagement Metrics" icon={BarChart3}>
-            <VStack spacing={6} align="stretch">
-              <Box>
-                <HStack justify="space-between" mb={2}>
-                  <Text fontSize="sm" fontWeight="medium">Daily Active Users</Text>
-                  <Text fontSize="sm" color="gray.500">73%</Text>
-                </HStack>
-                <Progress value={73} colorScheme="blue" size="lg" borderRadius="full" />
-              </Box>
-              
-              <Box>
-                <HStack justify="space-between" mb={2}>
-                  <Text fontSize="sm" fontWeight="medium">User Retention Rate</Text>
-                  <Text fontSize="sm" color="gray.500">86%</Text>
-                </HStack>
-                <Progress value={86} colorScheme="green" size="lg" borderRadius="full" />
-              </Box>
-              
-              <Box>
-                <HStack justify="space-between" mb={2}>
-                  <Text fontSize="sm" fontWeight="medium">Conversion Rate</Text>
-                  <Text fontSize="sm" color="gray.500">34%</Text>
-                </HStack>
-                <Progress value={34} colorScheme="purple" size="lg" borderRadius="full" />
-              </Box>
-              
-              <Box>
-                <HStack justify="space-between" mb={2}>
-                  <Text fontSize="sm" fontWeight="medium">Churn Rate</Text>
-                  <Text fontSize="sm" color="gray.500">12%</Text>
-                </HStack>
-                <Progress value={12} colorScheme="red" size="lg" borderRadius="full" />
-              </Box>
-              
-              <Divider />
-              
-              <HStack justify="space-between">
-                <VStack align="start" spacing={0}>
-                  <Text fontSize="2xl" fontWeight="bold">94.2%</Text>
-                  <Text fontSize="xs" color="gray.500">Customer Satisfaction</Text>
-                </VStack>
-                <Icon as={TrendingUp} color="green.400" boxSize={6} />
-              </HStack>
-            </VStack>
           </ChartCard>
         </Grid>
       </Container>
